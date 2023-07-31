@@ -1,0 +1,75 @@
+#!/usr/bin/env sh
+# this file should be copied to the router at /www/cgi-bin/lul
+# environment variables should be set in /root/lul.env
+set -e
+if [ -f "/root/lul.env" ]; then source /root/lul.env; fi
+respond(){
+    local status_code="$1"
+    local content="$2"
+    echo "Status: $status_code"
+    echo "Content-type: text/plain"
+    echo
+    echo -e "$content"
+    exit
+}
+set_mwan3(){
+    local policy="$1"
+    uci set "mwan3.use_for_rest.use_policy=$policy"
+    uci commit mwan3
+    mwan3 restart
+}
+
+if [ -z "$LUL_ALLOWED_IPS" ] || [ "$(echo "$LUL_ALLOWED_IPS" | wc -m)" -le 1 ];then
+    respond 503 "SERVER_ERROR\nNo Allowed IP was defined"
+fi
+# check if request is comming from an allowed ip address
+# $LUL_ALLOWED_IPS is a list of allowed ip addresses separated by space
+ip_address="$REMOTE_ADDR"
+is_allowed=no
+for allowed_ip in $LUL_ALLOWED_IPS; do
+    if [ "$ip_address" = "$allowed_ip" ]; then
+        is_allowed=yes
+        break
+    fi
+done
+if [ "$is_allowed" = "no" ]; then
+    respond 403 "NOT_ALLOWED_IP\nYour Client is Forbidden"
+fi
+
+# check if LUL_PASSWORD is set.
+if [ -z "$LUL_PASSWORD" ]; then 
+    respond 503 "SERVER_ERROR\nNo Password was set in the server"
+fi
+
+request_body="$(cat)"
+password="$(echo $request_body | cut -d':' -f1)"
+command="$(echo $request_body | cut -d':' -f2)"
+# check if client's password is correct
+if ! [ "$password" = "$LUL_PASSWORD" ]; then
+    respond 403 "WRONG_PASSWORD\nThe Provided Password is not Correct"
+fi
+current_policy="$(uci show mwan3.use_for_rest.use_policy | cut -d'=' -f2 | tr -d \')"
+if [ -z "$current_policy" ]; then
+    respond 503 "SERVER_ERROR\nSomething is wrong with uci"
+fi
+if [ "$command" = "on" ]; then
+    if [ "$current_policy" = "default_policy" ]; then
+        set_mwan3 wanb_only
+    fi
+    respond 200 "OK"
+elif [ "$command" = "off" ]; then
+    if [ "$current_policy" = "wanb_only" ]; then
+        set_mwan3 default_policy
+    fi
+    respond 200 "OK"
+elif [ "$command" = "status" ]; then
+    if [ "$current_policy" = "default_policy" ]; then
+        respond 200 "off"
+    elif [ "$current_policy" = "wanb_only" ]; then
+        respond 200 "on"
+    else
+        respond 503 "SERVER_ERROR\nuci is Returning '$current_policy' which is not a valid policy"
+    fi
+else
+    respond 400  "UNKNOWN_COMMAND\nNo Such Command: '$command' Exists"
+fi
