@@ -1,0 +1,8 @@
+# cron jobs to run the script periodically
+# check every 20 minutes from 0 AM to 2 AM
+# don't check from 2 AM to 5 AM
+# check every 20 minutes from 5 AM to 7 AM
+# check every 10 minutes for the rest
+*/20    0-1        *       *       *       /lud/bin/main >> /var/log/lul.log 2>&1
+*/20    5-6        *       *       *       /lud/bin/main >> /var/log/lul.log 2>&1
+*/10    7-23       *       *       *       /lud/bin/main >> /var/log/lul.log 2>&1

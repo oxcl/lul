@@ -1,7 +1,14 @@
 # lul - LTE Usage Limiter
+constantly monitor lte traffic usage and limit the usage using mwan3
 
 ## Setup
-use scp to copy the lul file into /www/cgi-bin/lul. then create a /root/lul.env file and add the environment variables
+```
+git clone https://github.com/oxcl/lul ./lul
+cd lul
+scp ./lul root@router-ip-address:/www/cgi-bin/lul
+cp ./nginx.conf /etc/nginx/nginx.conf
+(crontab -l; cat ./crontab) | crontab -
+```
 
 ## Environment Variables
 these environment variables should be set in the router
