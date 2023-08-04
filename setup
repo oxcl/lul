@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+set -e
+set -x
+pip install -r requirements.txt
+scp -O ./lul root@$1:/www/cgi-bin/lul
+scp -O .router_template root@$1:/root/lul.env
+ssh root@$1 "chmod +x /www/cgi-bin/lul"
+(crontab -l; cat ./crontab) | crontab -
+cp .env_template .env
+# following commands should be executed as root
+sudo cp nginx.conf /etc/nginx/nginx.conf
+sudo cp www /www -r
+sudo chown -R www:www /www
+sudo nginx
+# run main.py to make sure everything is working
+chmod +x main.py
+./main.py

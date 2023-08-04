@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# load .env file if exists
+from dotenv import load_dotenv
+load_dotenv()
+
 import requests
 import os
 import json
@@ -8,10 +13,7 @@ from env import *
 from util import *
 from fetch import fetch
 import router
-from dotenv import load_dotenv
 
-# load .env file if exists
-load_dotenv()
 
 log("program has started.")
 

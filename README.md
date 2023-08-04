@@ -10,23 +10,12 @@ constantly monitor lte traffic usage and limit the usage using mwan3
 ```bash
 $ git clone https://github.com/oxcl/lul ./lul
 $ cd lul
-$ pip install -r requirements.txt
-$ scp -O ./lul root@ROUTER_IP_ADDRESS:/www/cgi-bin/lul
-$ ssh root@ROUTER_IP_ADDRESS "echo LUL_ALLOWED_IPS='list-of-allowed-ips' >> /root/lul.env"
-$ ssh root@ROUTER_IP_ADDRESS "echo LUL_PASSWORD='router-password' >> /root/lul.env"
-$ (crontab -l; cat ./crontab) | crontab -
-$ cp .env_template .env
-$ vim .env # add required values
-# following commands should be executed as root
-cp nginx.conf /etc/nginx/nginx.conf
-cp www /www -r
-chown -R www:www /www
-nginx
-chmod +x main.py
-$ ./main.py
+$ vim .env_template # add required variables
+$ vim .router_template # add required variables
+$ sh ./setup *ROUTER_IP_ADDRESS*
 ```
 you should also add the required environment variables for the lul instance to work properly.
-environments are loaded automatically by the cron job if a `.env` file is available in the lul folder ( a .env_template file is available to make life easy)
+environments are loaded automatically if a `.env` file is available in the lul folder ( a .env_template file is available to make life easy)
 
 fetching information from the ISP requires a `headers.json` file which contains request headers and can optionally use a `req_data.txt` which contains post request data. these files are used for authentication of ISP web service. make sure they are placed correctly at `$LUL_DATA_DIR` which is by default `$HOME/.lul`
 
