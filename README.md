@@ -10,7 +10,7 @@ constantly monitor lte traffic usage and limit the usage using mwan3
 ```bash
 $ git clone https://github.com/oxcl/lul ./lul
 $ cd lul
-$ pip -r requirements.txt
+$ pip install -r requirements.txt
 $ scp -O ./lul root@ROUTER_IP_ADDRESS:/www/cgi-bin/lul
 $ ssh root@ROUTER_IP_ADDRESS "echo LUL_ALLOWED_IPS='list-of-allowed-ips' >> /root/lul.env"
 $ ssh root@ROUTER_IP_ADDRESS "echo LUL_PASSWORD='router-password' >> /root/lul.env"
