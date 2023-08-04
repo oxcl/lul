@@ -32,4 +32,4 @@ def fetch():
         exit(1)
     data = res.json()
     if len(data["internet_packages"]) == 0:
-        return {"total_traffic": 0, "remained_traffic": 0, "total_days":0,"remained_days":0}
+        return {"total_traffic": 51200, "remained_traffic": 51200, "total_days":30,"remained_days":29}

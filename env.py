@@ -10,9 +10,9 @@ def get_environ(variable_name,default_value=None):
         else:
             return default_value
 
-ROUTER_IP = get_environ("LUL_ROUTER_IP")
+ROUTER_URL = get_environ("LUL_ROUTER_URL")
 ROUTER_PASSWORD = get_environ("LUL_ROUTER_PASSWORD")
-ROUTER_USE_SSL = get_environ("LUL_USE_SSL","no")
+ROUTER_PROTOCOL = get_environ("LUL_ROUTER_PROTOCOL","http")
 DATA_DIR = get_environ("LUL_DATA_DIR",f"{os.path.expanduser('~')}/.lul")
-DATABASE_FILE = f"{DATA_DIR}/database.json"
 ISP_URL = get_environ("LUL_ISP_URL")
+DAY_STARTS_AT = int(get_environ("LUL_DAY_START_AT","0")) # at what hour of the day should the traffic share for the day be allocated
