@@ -7,19 +7,22 @@ constantly monitor lte traffic usage and limit the usage using mwan3
 - cron
 
 ## Setup
-```
-# git clone https://github.com/oxcl/lul ./lul
-# cd lul
-# scp -O ./lul root@ROUTER_IP_ADDRESS:/www/cgi-bin/lul
-# ssh root@ROUTER_IP_ADDRESS "echo LUL_ALLOWED_IPS='list-of-allowed-ips' >> /root/lul.env"
-# ssh root@ROUTER_IP_ADDRESS "echo LUL_PASSWORD='router-password' >> /root/lul.env"
-# cp nginx.conf /etc/nginx/nginx.conf
-# chown -R www:www ./www
-# nginx
-# (crontab -l; cat ./crontab) | crontab -
-# cp .env_template .env
-# vim .env # add required values
-# ./main.py
+```bash
+$ git clone https://github.com/oxcl/lul ./lul
+$ cd lul
+$ pip -r requirements.txt
+$ scp -O ./lul root@ROUTER_IP_ADDRESS:/www/cgi-bin/lul
+$ ssh root@ROUTER_IP_ADDRESS "echo LUL_ALLOWED_IPS='list-of-allowed-ips' >> /root/lul.env"
+$ ssh root@ROUTER_IP_ADDRESS "echo LUL_PASSWORD='router-password' >> /root/lul.env"
+$ (crontab -l; cat ./crontab) | crontab -
+$ cp .env_template .env
+$ vim .env # add required values
+# following commands should be executed as root
+cp nginx.conf /etc/nginx/nginx.conf
+cp www /www -r
+chown -R www:www /www
+nginx
+$ ./main.py
 ```
 you should also add the required environment variables for the lul instance to work properly.
 environments are loaded automatically by the cron job if a `.env` file is available in the lul folder ( a .env_template file is available to make life easy)
