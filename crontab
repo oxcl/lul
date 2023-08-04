@@ -3,6 +3,6 @@
 # don't check from 2 AM to 5 AM
 # check every 20 minutes from 5 AM to 7 AM
 # check every 10 minutes for the rest
-*/20    0-1        *       *       *       /lud/bin/main >> /var/log/lul.log 2>&1
-*/20    5-6        *       *       *       /lud/bin/main >> /var/log/lul.log 2>&1
-*/10    7-23       *       *       *       /lud/bin/main >> /var/log/lul.log 2>&1
+*/20    0-1        *       *       *       [ -f $HOME/lul/.env ] && source $HOME/lul/.env; $HOME/lul/main.py >> /var/log/lul.log 2>&1
+*/20    5-6        *       *       *       [ -f $HOME/lul/.env ] && source $HOME/lul/.env; $HOME/lul/main.py >> /var/log/lul.log 2>&1
+*/10    7-23       *       *       *       [ -f $HOME/lul/.env ] && source $HOME/lul/.env; $HOME/lul/main.py >> /var/log/lul.log 2>&1
