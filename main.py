@@ -58,6 +58,8 @@ used_traffic = total_traffic - remained_traffic
 # calculate how much traffic is allowed to be used for the passed days
 traffic_limit = daily_traffic_share * (total_days - remained_days + (1 if is_new_day else 0) )
 
+log(f"is_new_day: {is_new_day}, used_traffic: {used_traffic}, traffic_limit: {traffic_limit}")
+
 if used_traffic >= traffic_limit:
     log(f"used traffic exceeds traffic limit. enabling lul in the router.")
     router.on()

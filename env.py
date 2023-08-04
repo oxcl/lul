@@ -15,4 +15,4 @@ ROUTER_PASSWORD = get_environ("LUL_ROUTER_PASSWORD")
 ROUTER_PROTOCOL = get_environ("LUL_ROUTER_PROTOCOL","http")
 DATA_DIR = get_environ("LUL_DATA_DIR",f"{os.path.expanduser('~')}/.lul")
 ISP_URL = get_environ("LUL_ISP_URL")
-DAY_STARTS_AT = int(get_environ("LUL_DAY_START_AT","0")) # at what hour of the day should the traffic share for the day be allocated
+DAY_STARTS_AT = int(get_environ("LUL_DAY_STARTS_AT","0")) # at what hour of the day should the traffic share for the day be allocated

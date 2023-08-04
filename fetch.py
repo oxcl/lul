@@ -1,8 +1,10 @@
 # this file should be modified when switching to a new ISP
 import json
 import os
-import sys
+import re
 import requests
+import jdatetime
+from datetime import datetime
 from env import *
 from util import *
 def fetch():
@@ -32,4 +34,34 @@ def fetch():
         exit(1)
     data = res.json()
     if len(data["internet_packages"]) == 0:
-        return {"total_traffic": 51200, "remained_traffic": 51200, "total_days":30,"remained_days":29}
+        return {"total_traffic": 51200, "remained_traffic": 0, "total_days":30,"remained_days":29}
+    else:
+        start_date_raw = data["internet_packages"][0]["startDate"]
+        start_date = datetime.strptime(start_date_raw,"%Y-%m-%dT%H:%M:%S+03:30")
+        expire_time_raw = data["internet_packages"][0]["expire"]
+        expire_time = jdatetime.date(*[int(x) for x in expire_time_raw.split('/')]).togregorian()
+        expire_date = datetime(expire_time.year,expire_time.month,expire_time.day)
+        total_days = ( expire_date - start_date ).days
+        total_days = total_days + 1 # because isp reports 30 days as 29 days
+        remained_days = (expire_date - datetime.today()).days
+        remained_days = remained_days + 1 # because isp reports 30 days as 29 days
+
+        remained_traffic_raw = data["internet_packages"][0]["remained"]
+        remained_traffic = re.findall("\d",remained_traffic_raw)
+        remained_traffic = "".join(remained_traffic)
+        remained_traffic = int(remained_traffic)
+
+        name = data["internet_packages"][0]["name"]
+        total_traffic_raw = name.split("-")[1]
+        total_traffic = re.findall("\d",total_traffic_raw)
+        total_traffic = "".join(total_traffic)
+        total_traffic = int(total_traffic) * 1024
+
+        return {
+            "total_traffic":total_traffic,
+            "remained_traffic":remained_traffic,
+            "total_days": total_days,
+            "remained_days":remained_days
+        }
+
+        exit()
