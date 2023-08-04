@@ -14,17 +14,19 @@ constantly monitor lte traffic usage and limit the usage using mwan3
 # ssh root@ROUTER_IP_ADDRESS "echo LUL_ALLOWED_IPS='list-of-allowed-ips' >> /root/lul.env"
 # ssh root@ROUTER_IP_ADDRESS "echo LUL_PASSWORD='router-password' >> /root/lul.env"
 # cp nginx.conf /etc/nginx/nginx.conf
-# # make sure 'www' user exists
 # chown -R www:www ./www
-# nginx -s reload
+# nginx
 # (crontab -l; cat ./crontab) | crontab -
 # cp .env_template .env
 # vim .env # add required values
+# ./main.py
 ```
 you should also add the required environment variables for the lul instance to work properly.
 environments are loaded automatically by the cron job if a `.env` file is available in the lul folder ( a .env_template file is available to make life easy)
 
 fetching information from the ISP requires a `headers.json` file which contains request headers and can optionally use a `req_data.txt` which contains post request data. these files are used for authentication of ISP web service. make sure they are placed correctly at `$LUL_DATA_DIR` which is by default `$HOME/.lul`
+
+make sure `www` user exists for nginx to work
 
 ## Environment Variables
 required environment variables for the router:
