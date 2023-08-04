@@ -162,3 +162,5 @@ cython_debug/
 database.json
 headers.json
 req_data.txt
+lul.env
+www/data.json

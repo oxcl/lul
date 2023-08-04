@@ -2,7 +2,7 @@ import os
 from util import *
 def get_environ(variable_name,default_value=None):
     try:
-        return os.environ[variable_name]
+        return os.environ[variable_name] if os.environ[variable_name] != "" else default_value
     except:
         if default_value is None:
             log(f"Environment Variable '{variable_name}' must be set for this program to work")

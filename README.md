@@ -8,11 +8,12 @@ constantly monitor lte traffic usage and limit the usage using mwan3
 
 ## Setup
 ```bash
-$ git clone https://github.com/oxcl/lul ./lul
+$ git clone https://github.com/oxcl/lul
 $ cd lul
 $ vim .env_template # add required variables
 $ vim .router_template # add required variables
 $ sh ./setup *ROUTER_IP_ADDRESS*
+$ # copy headers.json and req_data.txt to DATA_DIR for the script to work properly
 ```
 you should also add the required environment variables for the lul instance to work properly.
 environments are loaded automatically if a `.env` file is available in the lul folder ( a .env_template file is available to make life easy)
