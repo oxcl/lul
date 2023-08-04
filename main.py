@@ -8,6 +8,10 @@ from env import *
 from util import *
 from fetch import fetch
 import router
+from dotenv import load_dotenv
+
+# load .env file if exists
+load_dotenv()
 
 log("program has started.")
 

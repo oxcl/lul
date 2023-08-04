@@ -22,6 +22,7 @@ cp nginx.conf /etc/nginx/nginx.conf
 cp www /www -r
 chown -R www:www /www
 nginx
+chmod +x main.py
 $ ./main.py
 ```
 you should also add the required environment variables for the lul instance to work properly.
