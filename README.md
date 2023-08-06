@@ -33,4 +33,5 @@ required environment variables for the lul instance to work:
 - `LUL_ISP_URL`
 - `LUL_ROUTER_PROTOCOL` (`http` or `https`. defaults to `http` if not provided)
 - `LUL_DATA_DIR` (defaults to `~/.lul` if not provided)
+- `LUL_WWW_DIR` (defaults to `/www` if not provided)
 - `LUL_DAY_STARTS_AT` (defaults to 0)

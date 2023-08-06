@@ -164,3 +164,4 @@ headers.json
 req_data.txt
 lul.env
 www/data.json
+www/db/*

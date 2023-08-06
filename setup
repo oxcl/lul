@@ -16,5 +16,5 @@ sudo touch /var/log/lul.log
 sudo chown $USER:$USER /var/log/lul.log
 sudo chmod 600 /var/log/lul.log
 # run main.py to make sure everything is working
-chmod +x main.py
-./main.py
+chmod +x app/main.py
+./app/main.py

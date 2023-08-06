@@ -12,25 +12,13 @@ import datetime
 from env import *
 from util import *
 from fetch import fetch
+from init import init
+from monitor import monitor
 import router
 
-
-log("program has started.")
-
-if not os.path.exists(DATA_DIR):
-    log(f"creating '${DATA_DIR}' folder")
-    os.makedirs(DATA_DIR)
-
-database_file = f"{DATA_DIR}/database.json"
-if os.path.exists(database_file):
-    with open(database_file,'r') as file:
-        log(f"loading database from '{database_file}'")
-        database = json.load(file)
-else:
-    with open(database_file,'w') as file: 
-        log(f"database does not exist at '{database_file}'. creating it.")
-        file.write("{}")
-        database = {}
+database_path = f"{DATA_DIR}/database.json"
+database = init(database_path)
+new_database = {}
 
 now = time.time()
 
@@ -66,17 +54,31 @@ traffic_limit = daily_traffic_share * (total_days - remained_days + (1 if is_new
 
 log(f"is_new_day: {is_new_day}, used_traffic: {used_traffic}, traffic_limit: {traffic_limit}")
 
+monitor(
+    time=now,
+    total_traffic=total_traffic,
+    remained_traffic=remained_traffic,
+    usage = (database["last_saved_traffic"] - remained_traffic) if ( "last_saved_traffic" in database ) else 0,
+    required_traffic_in_reserve= total_traffic - traffic_limit,
+    lul_status= router.is_on()
+)
+
 if used_traffic >= traffic_limit:
     log(f"used traffic exceeds traffic limit. enabling lul in the router.")
     router.on()
-    log(f"enabling standby mode until tomorrow at {DAY_STARTS_AT} o'clock.")
-    standby_until_time = datetime.datetime.today() + datetime.timedelta(days=1)
-    standby_until_time = standby_until_time.replace(hour=DAY_STARTS_AT,minute=0,second=0)
-    standby_until_time = int(standby_until_time.strftime("%s")) # convert to epoch
-    new_database = {"standby":True,"standby_until": standby_until_time}
-    with open(database_file,'w') as file:
-        json.dump(new_database,file)
+    # NOTE: standby is disabled for now to have more excesive logs in www/db
+    # log(f"enabling standby mode until tomorrow at {DAY_STARTS_AT} o'clock.")
+    # standby_until_time = datetime.datetime.today() + datetime.timedelta(days=1)
+    # standby_until_time = standby_until_time.replace(hour=DAY_STARTS_AT,minute=0,second=0)
+    # standby_until_time = int(standby_until_time.strftime("%s")) # convert to epoch
+    # new_database["standby"] = True
+    # new_database["standby_until"] = standby_until_time
 else:
     log(f"used traffic has not reached the limit yet. disabling lul if enabled")
     router.off()
+
+new_database["last_saved_traffic"] = remained_traffic
+with open(database_path,'w') as file:
+    json.dump(new_database,file)
+
 log("exitting")
