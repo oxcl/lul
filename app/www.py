@@ -1,6 +1,7 @@
 import jdatetime
 import datetime
 import os
+import json
 from env import *
 # log certain data to WWW_DIR so that it can be used to draw graphs and display information in the web interface
 # data is separated month by month into different files formatted in this way: YYYY-MM
@@ -21,3 +22,7 @@ def monitor(**kwargs):
         with open(date_file,'a') as file:
             file.write(",".join([str(int(item)) for item in kwargs.values()]))
             file.write("\n")
+
+def send_data(**kwargs):
+    with open(f"{WWW_DIR}/data.json",'w') as file:
+        json.dump(kwargs,file)

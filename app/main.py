@@ -4,16 +4,13 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-import requests
-import os
 import json
 import time
-import datetime
 from env import *
 from util import *
 from fetch import fetch
 from init import init
-from monitor import monitor
+import www
 import router
 
 database_path = f"{DATA_DIR}/database.json"
@@ -29,6 +26,9 @@ if "standby" in database and database["standby"] == True:
         log(f"standby mode is on until: {time.ctime(standby_until_time)}. exitting.")
         exit(0)
 
+router_is_on = router.is_on()
+log(f"router status: {'on' if router_is_on else 'off'}")
+
 log("fetching new information from ISP.")
 isp_data = fetch()
 log(isp_data)
@@ -36,6 +36,7 @@ total_traffic = isp_data["total_traffic"]
 remained_traffic = isp_data["remained_traffic"]
 total_days = isp_data["total_days"]
 remained_days = isp_data["remained_days"]
+
 
 if total_traffic == 0:
     log("total traffic is 0. perhaps no internet package is active. enabling lul in the router.")
@@ -49,18 +50,25 @@ is_new_day = int(time.strftime('%H')) >= DAY_STARTS_AT
 daily_traffic_share = total_traffic / total_days
 # calculate how much traffic was used
 used_traffic = total_traffic - remained_traffic
-# calculate how much traffic is allowed to be used for the passed days
+# calculate how much traffic is allowed to be used
 traffic_limit = daily_traffic_share * (total_days - remained_days + (1 if is_new_day else 0) )
 
 log(f"is_new_day: {is_new_day}, used_traffic: {used_traffic}, traffic_limit: {traffic_limit}")
 
-monitor(
+# log data to WWW_DIR/db
+www.monitor(
     time=now,
     total_traffic=total_traffic,
     remained_traffic=remained_traffic,
     usage = (database["last_saved_traffic"] - remained_traffic) if ( "last_saved_traffic" in database ) else 0,
     required_traffic_in_reserve= total_traffic - traffic_limit,
-    lul_status= router.is_on()
+    lul_status= router_is_on
+)
+www.send_data(
+    total_traffic_share = traffic_limit - used_traffic,
+    daily_traffic_share = daily_traffic_share,
+    day_starts_at = DAY_STARTS_AT,
+    lul_is_on = router_is_on
 )
 
 if used_traffic >= traffic_limit:
