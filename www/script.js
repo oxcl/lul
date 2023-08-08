@@ -37,7 +37,7 @@ function add_info(box_id,name,value){
     const jalali_database = await fetch_csv(jalali_csv_file)
 
     Chart.defaults.font.family = 'Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif'
-    Chart.defaults.font.size = 16
+    Chart.defaults.font.size = (window.innerWidth >= 800) ? 16 : 12 //(window.innerWidth)
 
     const ctx1 = create_graph('remained','نمودار حجم باقی مانده')
     const gradient_off = ctx1.createLinearGradient(0, 0, 0, 400);

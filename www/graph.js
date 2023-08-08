@@ -94,6 +94,11 @@ function draw_graph(ctx,datasets,timespan,locale){
                         }
                     }
                 },
+            },
+            plugins: {
+                legend: {
+                    display: window.innerWidth >= 600
+                }
             }
         }
     };
