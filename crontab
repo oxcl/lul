@@ -3,4 +3,4 @@
 # don't check from 2 AM to 5 AM
 # check every 20 minutes from 5 AM to 7 AM
 # check every 10 minutes for the rest
-*/10    *       *       *       *       $HOME/lul/main.py >> /var/log/lul.log 2>&1
+*/10    *       *       *       *       $HOME/lul/app/main.py >> /var/log/lul.log 2>&1
