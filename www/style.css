@@ -2,6 +2,9 @@ body{
     margin: 0;
     font-family: "Calibri", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+select,option{
+    font-family: inherit;
+}
 *,*::after,*::before{
     box-sizing: border-box;
 }
@@ -113,6 +116,10 @@ body{
     justify-content: center;
     text-align: center;
     direction: ltr;
+}
+select {
+    margin-right: .5rem;
+    padding: 0.25rem 0.5rem;
 }
 @media screen and (max-width: 1280px){
     .box-body .value{

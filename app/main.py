@@ -26,8 +26,7 @@ if "standby" in database and database["standby"] == True:
         log(f"standby mode is on until: {time.ctime(standby_until_time)}. exitting.")
         exit(0)
 
-router_is_on = router.is_on()
-log(f"router status: {'on' if router_is_on else 'off'}")
+log(f"router status: {'on' if router.is_on() else 'off'}")
 
 log("fetching new information from ISP.")
 isp_data = fetch()
@@ -55,21 +54,6 @@ traffic_limit = daily_traffic_share * (total_days - remained_days + (1 if is_new
 
 log(f"is_new_day: {is_new_day}, used_traffic: {used_traffic}, traffic_limit: {traffic_limit}")
 
-# log data to WWW_DIR/db
-www.monitor(
-    time=now,
-    total_traffic=total_traffic,
-    remained_traffic=remained_traffic,
-    usage = (database["last_saved_traffic"] - remained_traffic) if ( "last_saved_traffic" in database ) else 0,
-    required_traffic_in_reserve= total_traffic - traffic_limit,
-    lul_status= router_is_on
-)
-www.send_data(
-    total_traffic_share = traffic_limit - used_traffic,
-    daily_traffic_share = daily_traffic_share,
-    day_starts_at = DAY_STARTS_AT,
-    lul_is_on = router_is_on
-)
 
 if used_traffic >= traffic_limit:
     log(f"used traffic exceeds traffic limit. enabling lul in the router.")
@@ -84,6 +68,23 @@ if used_traffic >= traffic_limit:
 else:
     log(f"used traffic has not reached the limit yet. disabling lul if enabled")
     router.off()
+
+# log data to WWW_DIR/db
+router_is_on = router.is_on()
+www.monitor(
+    time=now * 1000, # javascript reads time in milliseconds
+    total_traffic=total_traffic,
+    remained_traffic=remained_traffic,
+    usage = (database["last_saved_traffic"] - remained_traffic) if ( "last_saved_traffic" in database ) else 0,
+    required_traffic_in_reserve= total_traffic - traffic_limit,
+    lul_status= router_is_on
+)
+www.send_data(
+    total_traffic_share = traffic_limit - used_traffic,
+    daily_traffic_share = daily_traffic_share,
+    day_starts_at = DAY_STARTS_AT,
+    lul_is_on = router_is_on
+)
 
 new_database["last_saved_traffic"] = remained_traffic
 with open(database_path,'w') as file:
