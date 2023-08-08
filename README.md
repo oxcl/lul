@@ -20,7 +20,7 @@ environments are loaded automatically if a `.env` file is available in the lul f
 
 fetching information from the ISP requires a `headers.json` file which contains request headers and can optionally use a `req_data.txt` which contains post request data. these files are used for authentication of ISP web service. make sure they are placed correctly at `$LUL_DATA_DIR` which is by default `$HOME/.lul`
 
-make sure `www` user exists for nginx to work
+make sure `www` user exists and the user running the script is added to the `www` group for nginx to work
 
 ## Environment Variables
 required environment variables for the router:

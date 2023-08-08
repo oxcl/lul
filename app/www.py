@@ -7,8 +7,8 @@ from env import *
 # data is separated month by month into different files formatted in this way: YYYY-MM
 # every data is saved twice once with normal date month separation into WWW_DIR/db and once with jalali month separation in WWW_DIR/db/jalali
 def monitor(**kwargs):
-    date = datetime.date.fromtimestamp(kwargs["time"])
-    jdate = jdatetime.date.fromtimestamp(kwargs["time"])
+    date = datetime.date.fromtimestamp(kwargs["time"] / 1000)
+    jdate = jdatetime.date.fromtimestamp(kwargs["time"] / 1000)
     file_path = f"{WWW_DIR}/db/{date.year}-{date.month}.csv"
     jfile_path = f"{WWW_DIR}/db/jalali/{jdate.year}-{jdate.month}.csv"
     # create database files if they don't exist
