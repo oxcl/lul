@@ -52,7 +52,7 @@ function add_info(box_id,name,value){
                 {
                     label: 'ترافیک باقی مانده',
                     data: get_data_from_database(database,"remained_traffic"),
-                    borderColor: COLORS.remained,
+                    borderColor: COLORS.default,
                 },
                 {
                     label: 'کل ترافیک',
@@ -71,7 +71,7 @@ function add_info(box_id,name,value){
             return [{
                 label: 'ترافیک مصرف شده',
                 data: get_data_from_database(database,"usage"),
-                borderColor: COLORS.usage,
+                borderColor: COLORS.default,
             }]
         }
     }

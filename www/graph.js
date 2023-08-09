@@ -18,7 +18,7 @@ const timespans = {
     }
 }
 const COLORS = {
-    remained: 'rgba(41, 128, 185,1.0)',
+    default: 'rgba(41, 128, 185,1.0)',
     total_lul_off: 'rgba(39, 174, 96,1)',
     total_gradient_lul_off0: 'rgba(39, 174, 96,.5)',
     total_gradient_lul_off1: 'rgba(39, 174, 96,0)',
@@ -26,7 +26,6 @@ const COLORS = {
     total_gradient_lul_on0: 'rgba(192, 57, 43,.5)',
     total_gradient_lul_on1: 'rgba(192, 57, 43,0)',
     required_traffic_in_reserve: 'rgba(127, 140, 141,1.0)',
-    usage: this.remained
 }
 // fetch csv file and parse it into a map with csv titles as keys and an array of data as values
 async function fetch_csv(csv_file_to_fetch){
@@ -98,6 +97,13 @@ function draw_graph(ctx,datasets,timespan,locale){
             plugins: {
                 legend: {
                     display: window.innerWidth >= 600
+                }
+            },
+            elements:{
+                point:{
+                    radius: 3,
+                    borderWidth: 0,
+                    backgroundColor: 'rgba(0,0,0,0)'
                 }
             }
         }
