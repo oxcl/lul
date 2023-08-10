@@ -6,6 +6,11 @@ const timespans = {
         max: new Date(today.getFullYear(),today.getMonth(),today.getDate() + 1,0,0,0).getTime(),
         time: { unit: 'hour'}
     },
+    yesterday: {
+        min: new Date(today.getFullYear(),today.getMonth(),today.getDate() - 1,0,0,0).getTime(),
+        max: new Date(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0).getTime(),
+        time: { unit: 'hour'}
+    },
     month: {
         min: new Date(today.getFullYear(),today.getMonth(),1,0,0,0).getTime(),
         max: new Date(today.getFullYear(),today.getMonth()+1,0,0,0,0).getTime(),
@@ -64,6 +69,7 @@ function create_graph(name,title){
             ${title}
             <select class="timespan-selector" id="timespan-selector-${name}" data-graph-name="${name}">
                 <option value="day">امروز</option>
+                <option value="yesterday">دیروز</option>
                 <option value="jmonth">این ماه (شمسی)</option>
                 <option value="month">این ماه (میلادی)</option>
             </select>
